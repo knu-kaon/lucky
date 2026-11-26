@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="곰두리의 오늘의 운세">
+  <meta name="theme-color" content="#E3F2FD">
+  <title>곰두리 우체부가 전해준 오늘의 운세</title>
+
+  <!-- 고운돋움 웹폰트 로드 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS 로드 -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            dodum: ['"Gowun Dodum"', 'sans-serif'],
+          },
+          colors: {
+            gomduri: {
+              bg: '#E3F2FD',
+              bgSub: '#F3F9FF',
+              card: '#FFFFFF',
+              navy: '#1E467A',
+              blue: '#5BA4E5',
+              sky: '#BBE0FF',
+              skyLight: '#EBF6FF',
+              red: '#E85A5A',
+              redDark: '#D14343',
+              cream: '#FFFDF7',
+              brown: '#8C583A',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    *, html, body, button, input, select, textarea {
+      font-family: 'Gowun Dodum', sans-serif !important;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      min-height: 100dvh;
+      background: linear-gradient(180deg, #D9EEFF 0%, #EFF8FF 50%, #E1F2FF 100%);
+      color: #1E467A;
+      overflow-x: hidden;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      padding-top: max(1.25rem, env(safe-area-inset-top));
+      padding-bottom: max(1.5rem, env(safe-area-inset-bottom));
+      padding-left: max(1rem, env(safe-area-inset-left));
+      padding-right: max(1rem, env(safe-area-inset-right));
+    }
+
+    button, a {
+      touch-action: manipulation;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    /* 곰두리 네이비 테두리 & 입체 그림자 */
+    .comic-box {
+      border: 3px solid #1E467A;
+      box-shadow: 5px 5px 0px #1E467A;
+      border-radius: 26px;
+    }
+
+    .comic-box-sm {
+      border: 2.5px solid #1E467A;
+      box-shadow: 3px 3px 0px #1E467A;
+      border-radius: 18px;
+    }
+
+    .comic-btn {
+      border: 3px solid #1E467A;
+      box-shadow: 4px 4px 0px #1E467A;
+      transition: transform 0.12s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.12s ease, background-color 0.15s ease;
+    }
+
+    @media (hover: hover) {
+      .comic-btn:hover {
+        transform: translate(-1px, -1px);
+        box-shadow: 5px 5px 0px #1E467A;
+      }
+    }
+
+    .comic-btn:active {
+      transform: translate(3px, 3px);
+      box-shadow: 1px 1px 0px #1E467A;
+    }
+
+    /* 아래쪽 곰두리 우체부를 가리키는 말풍선 */
+    .speech-bubble-top {
+      position: relative;
+      background: #FFFFFF;
+      border: 3px solid #1E467A;
+      box-shadow: 4px 4px 0px #1E467A;
+      border-radius: 22px;
+    }
+    .speech-bubble-top::before {
+      content: '';
+      position: absolute;
+      bottom: -16px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-width: 16px 12px 0 12px;
+      border-style: solid;
+      border-color: #1E467A transparent transparent transparent;
+    }
+    .speech-bubble-top::after {
+      content: '';
+      position: absolute;
+      bottom: -11px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-width: 13px 9px 0 9px;
+      border-style: solid;
+      border-color: #FFFFFF transparent transparent transparent;
+    }
+  </style>
+</head>
+<body class="flex flex-col justify-between sm:py-10">
+
+  <!-- 상단 타이틀 영역 -->
+  <header class="w-full max-w-xl mx-auto text-center mb-2 sm:mb-3">
+    <h1 class="text-3xl sm:text-5xl font-bold text-gomduri-navy tracking-tight">
+      오늘의 행운 편지
+    </h1>
+    <p class="text-lg sm:text-2xl font-bold text-gomduri-blue mt-0.5">
+      곰두리 우체부가 배달한 오늘의 운세예요!
+    </p>
+  </header>
+
+  <!-- 메인 콘텐츠 -->
+  <main class="w-full max-w-xl mx-auto flex-1 flex flex-col items-center justify-center">
+
+    <!-- 1. 곰두리 우체부 & 말풍선 영역 -->
+    <section class="w-full flex flex-col items-center mb-2">
+      <!-- 말풍선 -->
+      <div class="speech-bubble-top px-4 py-3 sm:px-6 sm:py-3.5 max-w-md w-full text-center mb-3 sm:mb-4">
+        <p id="gomduriSpeechText" class="text-lg sm:text-2xl font-bold text-gomduri-navy leading-snug break-keep">
+          똑똑! 오늘 도착한 따끈따끈한 행운 편지 받아가세요! 💌
+        </p>
+      </div>
+
+      <!-- 곰두리 우체부 캐릭터 버튼 -->
+      <button type="button"
+              id="gomduriBtn"
+              onclick="onGomduriClick()"
+              title="곰두리 우체부를 눌러보세요!"
+              class="w-40 h-40 sm:w-52 sm:h-52 flex items-center justify-center cursor-pointer focus:outline-none select-none bg-transparent border-0 p-0 active:scale-95 transition-transform">
+        <img id="gomduriImg"
+             src="곰두리_우체부-removebg-preview.png"
+             alt="곰두리 우체부 마스코트"
+             onerror="handleGomduriImageError(this)"
+             class="w-full h-full object-contain pointer-events-none" />
+      </button>
+    </section>
+
+    <!-- 2. 오늘의 운세 카드 전체 래퍼 -->
+    <article class="w-full bg-gomduri-card comic-box p-5 sm:p-8 relative">
+
+      <!-- 운세 카드 영역 -->
+      <div id="fortuneCaptureArea" class="bg-gomduri-card rounded-2xl p-2 sm:p-3 relative">
+        <!-- 모서리 하트 장식 -->
+        <span class="absolute top-1 left-1.5 text-gomduri-red text-lg sm:text-xl select-none">♥</span>
+        <span class="absolute top-1 right-1.5 text-gomduri-red text-lg sm:text-xl select-none">♥</span>
+
+        <!-- 오늘 날짜 뱃지 -->
+        <div class="flex flex-wrap items-center justify-center gap-2 mb-2.5 sm:mb-3 pt-1">
+          <span id="todayFortuneBadge" class="px-4 py-0.5 rounded-full bg-gomduri-sky border-2 border-gomduri-navy text-base sm:text-xl font-bold text-gomduri-navy">
+            오늘의 운세 편지
+          </span>
+        </div>
+
+        <!-- 운세 카테고리 / 지수 뱃지 -->
+        <div class="text-center mb-2">
+          <span id="fortuneThemeBadge" class="inline-block max-w-full px-3.5 py-0.5 rounded-full bg-gomduri-skyLight border-2 border-gomduri-navy text-sm sm:text-lg font-bold text-gomduri-navy break-keep">
+            💌 행운 지수 100% · 반짝이는 하루
+          </span>
+        </div>
+
+        <!-- 오늘의 운세 핵심 키워드(제목) -->
+        <div class="text-center my-2.5 sm:my-3 px-1">
+          <h2 id="fortuneTitleDisplay" class="text-3xl sm:text-5xl font-bold text-gomduri-navy leading-tight break-keep">
+            생각지 못한 기분 좋은 소식
+          </h2>
+        </div>
+
+        <!-- 오늘의 운세 메시지 박스 -->
+        <div class="mt-6 mb-4 sm:mt-7 sm:mb-5 bg-gomduri-skyLight comic-box-sm p-4 sm:p-6 text-center relative">
+          <div class="inline-flex items-center gap-1.5 px-3.5 py-0.5 rounded-full bg-gomduri-red text-white font-bold text-sm sm:text-lg border-2 border-gomduri-navy -mt-8 sm:-mt-9 mb-1.5 sm:mb-2 shadow-sm">
+            <span>💌 곰두리의 편지 내용</span>
+          </div>
+
+          <blockquote id="fortuneMessageText" class="text-xl sm:text-2xl font-bold text-gomduri-navy leading-relaxed break-keep my-1">
+            “오래 기다리던 반가운 연락이나 작은 선물이 찾아오는 설레는 하루가 될 거예요!”
+          </blockquote>
+        </div>
+
+        <!-- 행운 아이템 & 행운 컬러 미니 카드 -->
+        <div class="grid grid-cols-2 gap-2.5 sm:gap-3 text-center mb-1">
+          <div class="bg-[#FFF9E6] border-2 border-gomduri-navy rounded-2xl py-2 px-3">
+            <p class="text-xs sm:text-base font-bold text-gomduri-blue">🍀 오늘의 행운 아이템</p>
+            <p id="luckyItemDisplay" class="text-base sm:text-xl font-bold text-gomduri-navy mt-0.5 break-keep">하트 스티커</p>
+          </div>
+          <div class="bg-[#FFF9E6] border-2 border-gomduri-navy rounded-2xl py-2 px-3">
+            <p class="text-xs sm:text-base font-bold text-gomduri-blue">🎨 오늘의 행운 컬러</p>
+            <p id="luckyColorDisplay" class="text-base sm:text-xl font-bold text-gomduri-navy mt-0.5 break-keep">포근한 하늘색</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 다른 운세 뽑기 버튼 -->
+      <div class="mt-4 mb-2.5 sm:mb-3">
+        <button type="button"
+                onclick="recommendRandomFortune()"
+                class="w-full min-h-[52px] comic-btn py-3 px-4 rounded-2xl bg-gomduri-sky hover:bg-[#9FD3FF] text-gomduri-navy font-bold text-lg sm:text-xl flex items-center justify-center gap-2 cursor-pointer">
+          <span>✉️ 다른 행운 편지 뽑아보기</span>
+        </button>
+      </div>
+
+      <!-- 하단 액션 버튼 (이미지로 저장 & 문구 복사하기) -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
+        <button type="button"
+                id="saveImageBtn"
+                onclick="saveFortuneAsImage()"
+                class="min-h-[52px] comic-btn py-3 px-4 rounded-2xl bg-gomduri-red hover:bg-gomduri-redDark text-white font-bold text-lg sm:text-xl flex items-center justify-center gap-2 cursor-pointer">
+          <span>🖼️ 오늘의 운세 이미지 저장</span>
+        </button>
+
+        <button type="button"
+                onclick="copyFortuneText()"
+                class="min-h-[52px] comic-btn py-3 px-4 rounded-2xl bg-[#FFE885] hover:bg-[#FFD84D] text-gomduri-navy font-bold text-lg sm:text-xl flex items-center justify-center gap-2 cursor-pointer">
+          <span>📋 운세 내용 복사하기</span>
+        </button>
+      </div>
+    </article>
+
+  </main>
+
+  <!-- 푸터 -->
+  <footer class="w-full max-w-xl mx-auto text-center mt-5 sm:mt-6 pt-2 text-base sm:text-lg font-bold text-gomduri-blue break-keep px-2">
+    <p>곰두리 우체부가 매일 아침 설레는 행운을 배달해 드립니다 💙</p>
+  </footer>
+
+  <!-- 모바일 이미지 저장용 미리보기 모달 (아이폰/안드로이드 인앱 브라우저 꾹 눌러 저장 완벽 지원) -->
+  <div id="imagePreviewModal"
+       onclick="closeImageModal(event)"
+       class="fixed inset-0 z-50 hidden bg-black/65 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white comic-box max-w-md w-full p-4 sm:p-5 text-center relative max-h-[90dvh] overflow-y-auto"
+         onclick="event.stopPropagation()">
+      <div class="flex items-center justify-between mb-2">
+        <span class="text-lg sm:text-xl font-bold text-gomduri-navy">🖼️ 오늘의 운세 카드 완성!</span>
+        <button type="button"
+                onclick="closeImageModal()"
+                class="w-9 h-9 rounded-full bg-gomduri-sky border-2 border-gomduri-navy font-bold text-gomduri-navy flex items-center justify-center cursor-pointer">
+          ✕
+        </button>
+      </div>
+
+      <p id="modalGuideText" class="text-sm sm:text-base font-bold text-gomduri-red bg-[#FFF3F3] border-2 border-gomduri-red/40 rounded-xl py-2 px-3 mb-3 break-keep">
+        📱 휴대폰에서는 아래 이미지를 <b>꾹 눌러서 [사진에 저장]</b>을 선택해주세요!
+      </p>
+
+      <div class="rounded-2xl overflow-hidden border-2 border-gomduri-navy shadow-md mb-3 bg-[#E3F2FD]">
+        <img id="generatedResultImg" src="" alt="오늘의 운세 저장 이미지" class="w-full h-auto block select-auto" style="-webkit-touch-callout: default; user-select: auto; -webkit-user-select: auto;" />
+      </div>
+
+      <div class="grid grid-cols-2 gap-2">
+        <button type="button"
+                id="modalDownloadBtn"
+                onclick="triggerDirectDownload()"
+                class="min-h-[46px] comic-btn py-2 px-3 rounded-xl bg-gomduri-sky text-gomduri-navy font-bold text-base sm:text-lg flex items-center justify-center gap-1 cursor-pointer">
+          <span>⬇️ 파일 저장</span>
+        </button>
+        <button type="button"
+                id="modalShareBtn"
+                onclick="shareGeneratedImage()"
+                class="min-h-[46px] comic-btn py-2 px-3 rounded-xl bg-gomduri-red text-white font-bold text-base sm:text-lg flex items-center justify-center gap-1 cursor-pointer">
+          <span>📤 공유/앨범저장</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 알림 토스트 -->
+  <div id="cuteToast"
+       style="bottom: max(1.25rem, env(safe-area-inset-bottom));"
+       class="fixed left-1/2 -translate-x-1/2 z-50 pointer-events-none opacity-0 translate-y-4 transition-all duration-300 max-w-[92vw]">
+    <div class="px-4 py-2.5 sm:px-5 rounded-full bg-gomduri-navy text-white border-2 border-gomduri-sky shadow-lg font-bold text-base sm:text-xl flex items-center justify-center gap-2 text-center break-keep">
+      <span>💌</span>
+      <span id="cuteToastText">오늘의 운세 이미지를 만들었어요!</span>
+    </div>
+  </div>
+
+  <script>
+    const FORTUNE_LIST = [
+      {
+        theme: "💌 행운 지수 100% · 설레는 우편함",
+        title: "생각지 못한 반가운 소식",
+        message: "오래 기다리던 반가운 연락이나 기분 좋은 소식이 편지처럼 날아오는 하루예요!",
+        speech: "똑똑! 우편함에 반가운 소식이 가득 담긴 편지가 도착했어요! 💌",
+        item: "하트 씰링 스티커",
+        color: "포근한 하늘색"
+      },
+      {
+        theme: "✨ 성취운 최고 · 반짝이는 하루",
+        title: "하는 일마다 술술 풀리는 날",
+        message: "망설이던 일이 있다면 오늘 시작해 보세요. 생각보다 훨씬 가볍고 멋지게 해낼 수 있어요!",
+        speech: "오늘 곰두리가 응원 도장을 꾹 찍어드릴게요! 무엇이든 술술 풀릴 거예요! 🌟",
+        item: "좋아하는 필기구",
+        color: "크림 버터 옐로우"
+      },
+      {
+        theme: "🍀 소확행 가득 · 달콤한 휴식",
+        title: "작지만 확실한 행복의 발견",
+        message: "길가에서 마주친 귀여운 풍경이나 달콤한 간식 하나가 하루 전체를 환하게 밝혀줄 거예요.",
+        speech: "잠깐 숨을 고르고 주변을 둘러보세요! 작은 행복이 곳곳에 숨어 있답니다! 🍰",
+        item: "달콤한 디저트",
+        color: "딸기 우유 핑크"
+      },
+      {
+        theme: "💙 인연운 상승 · 따뜻한 마음",
+        title: "다정한 말 한마디의 기적",
+        message: "주변 사람에게 건넨 따뜻한 안부 인사가 더 큰 애정과 행운이 되어 돌아오는 날이에요.",
+        speech: "가슴 속 하트처럼 따뜻한 마음을 나누면 행운이 두 배가 된대요! 💙",
+        item: "손글씨 메모지",
+        color: "코발트 블루"
+      },
+      {
+        theme: "🌈 기회 포착 · 빛나는 직감",
+        title: "내 직감을 믿어도 좋은 날",
+        message: "문득 떠오른 아이디어가 멋진 결과로 이어집니다. 오늘만큼은 내 느낌을 믿고 나아가 보세요!",
+        speech: "반짝반짝 빛나는 곰두리의 눈처럼 오늘 직감이 아주 예리하게 빛나고 있어요! ✨",
+        item: "파란색 소품",
+        color: "맑은 민트색"
+      },
+      {
+        theme: "🎁 뜻밖의 행운 · 기분 좋은 우연",
+        title: "우연이 선물하는 기분 전환",
+        message: "평소와 조금 다른 길로 걷거나 새로운 플레이리스트를 틀어보세요. 기분 좋은 우연이 기다려요!",
+        speech: "가방 속에 쏙 넣어온 행운의 우편물을 꺼내드릴게요! 기분 좋은 하루 보내세요! 🎒",
+        item: "이어폰 & 좋아하는 노래",
+        color: "라벤더 퍼플"
+      },
+      {
+        theme: "☀️ 에너지 충전 · 든든한 하루",
+        title: "지치지 않는 긍정 에너지",
+        message: "조금 바쁘더라도 웃음을 잃지 않으면 주변까지 밝아집니다. 오늘의 주인공은 바로 당신이에요!",
+        speech: "오늘 하루도 씩씩하게 걸어갈 수 있게 곰두리가 든든한 응원을 배달왔어요! 💪",
+        item: "따뜻한 음료 한 잔",
+        color: "햇살 오렌지"
+      },
+      {
+        theme: "📖 집중력 상승 · 차분한 몰입",
+        title: "차곡차곡 쌓이는 나만의 실력",
+        message: "오늘 쏟은 작은 노력들이 모여 곧 큰 보답으로 돌아옵니다. 스스로를 충분히 칭찬해 주세요!",
+        speech: "한 걸음씩 차분히 나아가는 모습이 정말 멋져요! 오늘도 최고예요! 👏",
+        item: "깔끔한 노트",
+        color: "화이트 크림"
+      },
+      {
+        theme: "💫 소원 성취 · 희망찬 예감",
+        title: "마음속 바람이 가까워지는 날",
+        message: "그동안 마음속으로 바랐던 일에 작지만 분명한 청신호가 켜집니다. 설레는 마음으로 맞이해 보세요!",
+        speech: "하트 도장이 쾅 찍힌 특급 행운 편지예요! 좋은 일이 곧 찾아올 거예요! 📮",
+        item: "열쇠고리",
+        color: "체리 레드"
+      },
+      {
+        theme: "☁️ 마음 평화 · 포근한 위로",
+        title: "걱정은 내려놓고 편안해지는 날",
+        message: "복잡했던 고민이 자연스럽게 정리되고 마음이 구름처럼 가벼워지는 평화로운 하루가 될 거예요.",
+        speech: "무거운 걱정은 곰두리 우편 가방에 맡겨두고 오늘은 가볍게 웃어봐요! ☁️",
+        item: "폭신한 쿠션이나 인형",
+        color: "파스텔 스카이블루"
+      },
+      {
+        theme: "🎉 칭찬 가득 · 빛나는 존재감",
+        title: "어디서든 환영받는 기분 좋은 날",
+        message: "당신의 세심한 배려와 밝은 미소 덕분에 주변 사람들에게 기분 좋은 칭찬을 듣게 됩니다.",
+        speech: "오늘따라 더 반짝반짝 빛나 보이는데요? 모두에게 사랑받는 하루가 될 거예요! 🌷",
+        item: "손거울",
+        color: "피치 코랄"
+      },
+      {
+        theme: "🍯 재물·득템운 · 알찬 하루",
+        title: "기분 좋은 득템과 알뜰한 행운",
+        message: "마음에 쏙 드는 물건을 발견하거나 생각지 못한 혜택을 누리게 되는 알찬 하루예요!",
+        speech: "우편 가방에서 꺼낸 오늘의 보너스 행운! 기분 좋은 발견이 있을 거예요! 🪙",
+        item: "동전 지갑 또는 카드지갑",
+        color: "골드 옐로우"
+      }
+    ];
+
+    const GOMDURI_CLICK_MESSAGES = [
+      "오늘도 행운 편지 배달 완료! 💌",
+      "곰두리처럼 따뜻한 하루 보내세요 💙",
+      "우편 가방에 좋은 소식만 가득 담아왔어요! 🎒",
+      "언제나 반짝반짝 빛나는 당신을 응원해요 ✨",
+      "하트 도장 꾹! 오늘의 행운은 당신 거예요 ♥"
+    ];
+
+    let currentFortune = null;
+    let currentIsRandom = false;
+    let gomduriMsgIndex = 0;
+    let generatedDataUrl = null;
+    let generatedBlob = null;
+    let generatedFilename = "곰두리_오늘의운세.png";
+
+    function handleGomduriImageError(img) {
+      if (!img.dataset.triedJpg) {
+        img.dataset.triedJpg = "true";
+        img.src = "곰두리_우체부-removebg-preview.jpg";
+      } else {
+        img.style.display = "none";
+      }
+    }
+
+    function onGomduriClick() {
+      const speech = document.getElementById('gomduriSpeechText');
+      speech.textContent = GOMDURI_CLICK_MESSAGES[gomduriMsgIndex % GOMDURI_CLICK_MESSAGES.length];
+      gomduriMsgIndex++;
+    }
+
+    function getTodayInfo() {
+      const now = new Date();
+      const y = now.getFullYear();
+      const m = String(now.getMonth() + 1).padStart(2, '0');
+      const d = String(now.getDate()).padStart(2, '0');
+      return {
+        seedStr: `${y}-${m}-${d}`,
+        fileDateStr: `${y}${m}${d}`,
+        displayStr: `${y}년 ${Number(m)}월 ${Number(d)}일`
+      };
+    }
+
+    function hashDateSeed(str) {
+      let hash = 2166136261;
+      for (let i = 0; i < str.length; i++) {
+        hash ^= str.charCodeAt(i);
+        hash = Math.imul(hash, 16777619);
+      }
+      return Math.abs(hash);
+    }
+
+    function applyFortuneToUI(fortune, isRandom = false) {
+      currentFortune = fortune;
+      currentIsRandom = isRandom;
+      const dateInfo = getTodayInfo();
+
+      const badge = document.getElementById('todayFortuneBadge');
+      badge.textContent = isRandom ? `✉️ 추가 행운 편지 (${dateInfo.displayStr})` : `${dateInfo.displayStr} 오늘의 운세`;
+
+      document.getElementById('gomduriSpeechText').textContent = fortune.speech;
+      document.getElementById('fortuneThemeBadge').textContent = fortune.theme;
+      document.getElementById('fortuneTitleDisplay').textContent = fortune.title;
+      document.getElementById('fortuneMessageText').textContent = `“${fortune.message}”`;
+      document.getElementById('luckyItemDisplay').textContent = fortune.item;
+      document.getElementById('luckyColorDisplay').textContent = fortune.color;
+    }
+
+    function renderDailyFortune() {
+      const dateInfo = getTodayInfo();
+      const seed = hashDateSeed(dateInfo.seedStr);
+      const todayFortune = FORTUNE_LIST[seed % FORTUNE_LIST.length];
+      applyFortuneToUI(todayFortune, false);
+    }
+
+    function recommendRandomFortune() {
+      if (FORTUNE_LIST.length <= 1) return;
+
+      let nextFortune;
+      do {
+        const randomIndex = Math.floor(Math.random() * FORTUNE_LIST.length);
+        nextFortune = FORTUNE_LIST[randomIndex];
+      } while (currentFortune && nextFortune.title === currentFortune.title);
+
+      applyFortuneToUI(nextFortune, true);
+      showCuteToast('새로운 행운 편지를 꺼내왔어요! ✉️');
+    }
+
+    function drawRoundRect(ctx, x, y, w, h, r) {
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.lineTo(x + w - r, y);
+      ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+      ctx.lineTo(x + w, y + h - r);
+      ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+      ctx.lineTo(x + r, y + h);
+      ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+      ctx.lineTo(x, y + r);
+      ctx.quadraticCurveTo(x, y, x + r, y);
+      ctx.closePath();
+    }
+
+    function wrapCanvasText(ctx, text, maxWidth) {
+      const words = text.split(' ');
+      const lines = [];
+      let currentLine = '';
+
+      for (let i = 0; i < words.length; i++) {
+        const word = words[i];
+        const testLine = currentLine ? currentLine + ' ' + word : word;
+        if (ctx.measureText(testLine).width > maxWidth && currentLine) {
+          lines.push(currentLine);
+          currentLine = word;
+        } else {
+          currentLine = testLine;
+        }
+      }
+      if (currentLine) lines.push(currentLine);
+      return lines;
+    }
+
+    async function saveFortuneAsImage() {
+      if (!currentFortune) return;
+      const saveBtn = document.getElementById('saveImageBtn');
+      const originalBtnHTML = saveBtn.innerHTML;
+      saveBtn.disabled = true;
+      saveBtn.innerHTML = '<span>⏳ 카드 만드는 중...</span>';
+
+      try {
+        if (document.fonts && document.fonts.ready) {
+          await document.fonts.ready;
+        }
+
+        const dateInfo = getTodayInfo();
+        generatedFilename = `곰두리_오늘의운세_${dateInfo.fileDateStr}.png`;
+
+        const W = 900;
+        const H = 1180;
+        const canvas = document.createElement('canvas');
+        canvas.width = W;
+        canvas.height = H;
+        const ctx = canvas.getContext('2d');
+
+        const bgGrad = ctx.createLinearGradient(0, 0, 0, H);
+        bgGrad.addColorStop(0, '#D9EEFF');
+        bgGrad.addColorStop(0.5, '#EFF8FF');
+        bgGrad.addColorStop(1, '#D9EEFF');
+        ctx.fillStyle = bgGrad;
+        ctx.fillRect(0, 0, W, H);
+
+        ctx.fillStyle = 'rgba(91, 164, 229, 0.25)';
+        ctx.font = 'bold 34px "Gowun Dodum", sans-serif';
+        ctx.fillText('♥', 65, 90);
+        ctx.fillText('✦', 805, 110);
+        ctx.fillText('✦', 80, 1120);
+        ctx.fillText('♥', 800, 1110);
+
+        ctx.textAlign = 'center';
+        ctx.fillStyle = '#1E467A';
+        ctx.font = 'bold 54px "Gowun Dodum", sans-serif';
+        ctx.fillText('오늘의 행운 편지', W / 2, 105);
+
+        ctx.fillStyle = '#5BA4E5';
+        ctx.font = 'bold 30px "Gowun Dodum", sans-serif';
+        ctx.fillText('곰두리 우체부가 배달한 오늘의 운세예요!', W / 2, 152);
+
+        const gomduriImg = document.getElementById('gomduriImg');
+        let drewImg = false;
+        if (gomduriImg && gomduriImg.complete && gomduriImg.naturalWidth > 0 && gomduriImg.style.display !== 'none') {
+          try {
+            const imgSize = 230;
+            const ratio = gomduriImg.naturalWidth / gomduriImg.naturalHeight;
+            const drawW = ratio >= 1 ? imgSize : imgSize * ratio;
+            const drawH = ratio >= 1 ? imgSize / ratio : imgSize;
+            ctx.drawImage(gomduriImg, (W - drawW) / 2, 172, drawW, drawH);
+            drewImg = true;
+          } catch (e) {
+            drewImg = false;
+          }
+        }
+        if (!drewImg) {
+          ctx.font = '130px sans-serif';
+          ctx.fillText('🐻💌', W / 2, 330);
+        }
+
+        const cardX = 65;
+        const cardY = 415;
+        const cardW = W - 130;
+        const cardH = 685;
+
+        ctx.fillStyle = '#1E467A';
+        drawRoundRect(ctx, cardX + 10, cardY + 10, cardW, cardH, 38);
+        ctx.fill();
+
+        ctx.fillStyle = '#FFFFFF';
+        drawRoundRect(ctx, cardX, cardY, cardW, cardH, 38);
+        ctx.fill();
+        ctx.lineWidth = 6;
+        ctx.strokeStyle = '#1E467A';
+        ctx.stroke();
+
+        ctx.fillStyle = '#E85A5A';
+        ctx.font = 'bold 34px sans-serif';
+        ctx.fillText('♥', cardX + 46, cardY + 56);
+        ctx.fillText('♥', cardX + cardW - 46, cardY + 56);
+
+        const dateBadgeText = currentIsRandom
+          ? `✉️ 추가 행운 편지 (${dateInfo.displayStr})`
+          : `${dateInfo.displayStr} 오늘의 운세`;
+        ctx.font = 'bold 30px "Gowun Dodum", sans-serif';
+        const dateBadgeW = Math.min(cardW - 120, ctx.measureText(dateBadgeText).width + 64);
+        const dateBadgeH = 54;
+        const dateBadgeX = (W - dateBadgeW) / 2;
+        const dateBadgeY = cardY + 42;
+
+        ctx.fillStyle = '#BBE0FF';
+        drawRoundRect(ctx, dateBadgeX, dateBadgeY, dateBadgeW, dateBadgeH, 27);
+        ctx.fill();
+        ctx.lineWidth = 4;
+        ctx.strokeStyle = '#1E467A';
+        ctx.stroke();
+
+        ctx.fillStyle = '#1E467A';
+        ctx.fillText(dateBadgeText, W / 2, dateBadgeY + 37);
+
+        const themeText = currentFortune.theme;
+        ctx.font = 'bold 26px "Gowun Dodum", sans-serif';
+        const themeBadgeW = Math.min(cardW - 100, ctx.measureText(themeText).width + 54);
+        const themeBadgeH = 46;
+        const themeBadgeX = (W - themeBadgeW) / 2;
+        const themeBadgeY = dateBadgeY + 72;
+
+        ctx.fillStyle = '#EBF6FF';
+        drawRoundRect(ctx, themeBadgeX, themeBadgeY, themeBadgeW, themeBadgeH, 23);
+        ctx.fill();
+        ctx.lineWidth = 3.5;
+        ctx.strokeStyle = '#1E467A';
+        ctx.stroke();
+
+        ctx.fillStyle = '#1E467A';
+        ctx.fillText(themeText, W / 2, themeBadgeY + 32);
+
+        ctx.fillStyle = '#1E467A';
+        ctx.font = 'bold 52px "Gowun Dodum", sans-serif';
+        ctx.fillText(currentFortune.title, W / 2, themeBadgeY + 115);
+
+        const msgBoxX = cardX + 44;
+        const msgBoxY = themeBadgeY + 165;
+        const msgBoxW = cardW - 88;
+        const msgBoxH = 220;
+
+        ctx.fillStyle = '#1E467A';
+        drawRoundRect(ctx, msgBoxX + 6, msgBoxY + 6, msgBoxW, msgBoxH, 26);
+        ctx.fill();
+
+        ctx.fillStyle = '#EBF6FF';
+        drawRoundRect(ctx, msgBoxX, msgBoxY, msgBoxW, msgBoxH, 26);
+        ctx.fill();
+        ctx.lineWidth = 4.5;
+        ctx.strokeStyle = '#1E467A';
+        ctx.stroke();
+
+        const labelW = 260;
+        const labelH = 46;
+        const labelX = (W - labelW) / 2;
+        const labelY = msgBoxY - 23;
+        ctx.fillStyle = '#E85A5A';
+        drawRoundRect(ctx, labelX, labelY, labelW, labelH, 23);
+        ctx.fill();
+        ctx.lineWidth = 4;
+        ctx.strokeStyle = '#1E467A';
+        ctx.stroke();
+
+        ctx.fillStyle = '#FFFFFF';
+        ctx.font = 'bold 26px "Gowun Dodum", sans-serif';
+        ctx.fillText('💌 곰두리의 편지 내용', W / 2, labelY + 32);
+
+        ctx.fillStyle = '#1E467A';
+        ctx.font = 'bold 32px "Gowun Dodum", sans-serif';
+        const fullMsg = `“${currentFortune.message}”`;
+        const lines = wrapCanvasText(ctx, fullMsg, msgBoxW - 60);
+        const lineHeight = 46;
+        const startTextY = msgBoxY + (msgBoxH - (lines.length - 1) * lineHeight) / 2 + 14;
+        lines.forEach((line, idx) => {
+          ctx.fillText(line, W / 2, startTextY + idx * lineHeight);
+        });
+
+        const miniY = msgBoxY + msgBoxH + 28;
+        const miniGap = 24;
+        const miniW = (msgBoxW - miniGap) / 2;
+        const miniH = 115;
+
+        ctx.fillStyle = '#FFF9E6';
+        drawRoundRect(ctx, msgBoxX, miniY, miniW, miniH, 22);
+        ctx.fill();
+        ctx.lineWidth = 4;
+        ctx.strokeStyle = '#1E467A';
+        ctx.stroke();
+
+        ctx.fillStyle = '#5BA4E5';
+        ctx.font = 'bold 24px "Gowun Dodum", sans-serif';
+        ctx.fillText('🍀 오늘의 행운 아이템', msgBoxX + miniW / 2, miniY + 42);
+
+        ctx.fillStyle = '#1E467A';
+        ctx.font = 'bold 32px "Gowun Dodum", sans-serif';
+        ctx.fillText(currentFortune.item, msgBoxX + miniW / 2, miniY + 86);
+
+        const rightMiniX = msgBoxX + miniW + miniGap;
+        ctx.fillStyle = '#FFF9E6';
+        drawRoundRect(ctx, rightMiniX, miniY, miniW, miniH, 22);
+        ctx.fill();
+        ctx.lineWidth = 4;
+        ctx.strokeStyle = '#1E467A';
+        ctx.stroke();
+
+        ctx.fillStyle = '#5BA4E5';
+        ctx.font = 'bold 24px "Gowun Dodum", sans-serif';
+        ctx.fillText('🎨 오늘의 행운 컬러', rightMiniX + miniW / 2, miniY + 42);
+
+        ctx.fillStyle = '#1E467A';
+        ctx.font = 'bold 32px "Gowun Dodum", sans-serif';
+        ctx.fillText(currentFortune.color, rightMiniX + miniW / 2, miniY + 86);
+
+        ctx.fillStyle = '#5BA4E5';
+        ctx.font = 'bold 25px "Gowun Dodum", sans-serif';
+        ctx.fillText('곰두리 우체부가 매일 아침 설레는 행운을 배달해 드립니다 💙', W / 2, H - 34);
+
+        generatedDataUrl = canvas.toDataURL('image/png');
+        await new Promise((resolve) => {
+          canvas.toBlob((blob) => {
+            generatedBlob = blob;
+            resolve();
+          }, 'image/png');
+        });
+
+        const resultImg = document.getElementById('generatedResultImg');
+        resultImg.src = generatedDataUrl;
+        document.getElementById('imagePreviewModal').classList.remove('hidden');
+
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        if (!isMobile) {
+          triggerDirectDownload();
+        } else {
+          showCuteToast('이미지를 꾹 누르거나 [공유/앨범저장]을 눌러주세요! 📱');
+        }
+      } catch (err) {
+        console.error(err);
+        showCuteToast('이미지 생성 중 잠시 오류가 발생했어요. 다시 눌러주세요!');
+      } finally {
+        saveBtn.disabled = false;
+        saveBtn.innerHTML = originalBtnHTML;
+      }
+    }
+
+    function triggerDirectDownload() {
+      if (!generatedDataUrl) return;
+      try {
+        const link = document.createElement('a');
+        link.download = generatedFilename;
+        link.href = generatedDataUrl;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        showCuteToast('오늘의 운세 이미지가 저장되었습니다! 🖼️');
+      } catch (e) {
+        showCuteToast('위 이미지를 꾹 눌러서 [사진에 저장]을 선택해 주세요!');
+      }
+    }
+
+    async function shareGeneratedImage() {
+      if (!generatedBlob) {
+        triggerDirectDownload();
+        return;
+      }
+      try {
+        const file = new File([generatedBlob], generatedFilename, { type: 'image/png' });
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          await navigator.share({
+            files: [file],
+            title: '곰두리 우체부의 오늘의 운세',
+            text: '오늘 도착한 행운 편지예요 💌'
+          });
+          return;
+        }
+      } catch (err) {
+        if (err && err.name === 'AbortError') return;
+      }
+      triggerDirectDownload();
+      showCuteToast('기기에 따라 위 이미지를 꾹 눌러 저장하실 수 있어요! 📱');
+    }
+
+    function closeImageModal(event) {
+      if (event && event.target !== document.getElementById('imagePreviewModal')) return;
+      document.getElementById('imagePreviewModal').classList.add('hidden');
+    }
+
+    async function copyFortuneText() {
+      if (!currentFortune) return;
+
+      const dateInfo = getTodayInfo();
+      const textToCopy =
+        `💙💌 ${dateInfo.displayStr} 곰두리 우체부의 오늘의 운세
+` +
+        `✨ 키워드: ${currentFortune.title}
+` +
+        `📖 내용: "${currentFortune.message}"
+` +
+        `🍀 행운 아이템: ${currentFortune.item} / 🎨 행운 컬러: ${currentFortune.color}
+` +
+        `#오늘의운세 #곰두리우체부 #행운편지`;
+
+      if (navigator.clipboard && window.isSecureContext) {
+        try {
+          await navigator.clipboard.writeText(textToCopy);
+          showCuteToast('오늘의 운세 내용을 복사했어요! 💌');
+          return;
+        } catch (err) {
+          // 폴백 방식으로 진행
+        }
+      }
+
+      const textarea = document.createElement('textarea');
+      textarea.value = textToCopy;
+      textarea.setAttribute('readonly', '');
+      textarea.style.position = 'fixed';
+      textarea.style.left = '-9999px';
+      document.body.appendChild(textarea);
+      textarea.select();
+      textarea.setSelectionRange(0, 99999);
+
+      try {
+        document.execCommand('copy');
+        showCuteToast('오늘의 운세 내용을 복사했어요! 💌');
+      } catch (e) {
+        showCuteToast('복사에 실패했어요! 다시 한 번만 눌러주시겠어요? 💦');
+      } finally {
+        document.body.removeChild(textarea);
+      }
+    }
+
+    let toastTimer;
+    function showCuteToast(msg) {
+      const toast = document.getElementById('cuteToast');
+      const toastText = document.getElementById('cuteToastText');
+      if (!toast || !toastText) return;
+
+      toastText.textContent = msg;
+      toast.classList.remove('opacity-0', 'translate-y-4');
+      toast.classList.add('opacity-100', 'translate-y-0');
+
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toast.classList.remove('opacity-100', 'translate-y-0');
+        toast.classList.add('opacity-0', 'translate-y-4');
+      }, 2800);
+    }
+
+    window.addEventListener('DOMContentLoaded', renderDailyFortune);
+  </script>
+</body>
+</html>
